@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Product</title>
+    <link rel="stylesheet" href="./css/control.css">
+</head>
+<body>
+<?php
+   require("./../header.php");
+  require("./../../conn.php");
+  if(isset($_POST['from'])){
+   // Filter By Price
+   $from=$_POST['from'];
+   $to=$_POST['to'];
+     $product_obj=mysqli_query($conn,"SELECT * FROM `products` WHERE `price` BETWEEN '$from' AND '$to' ");
+  }elseif(isset($_POST['key'])){
+   //Search products by name 
+    $key=trim($_POST['key']);
+    $product_obj=mysqli_query($conn,"SELECT * FROM `products` WHERE `name`like'%$key%'");
+  }else{
+     $product_obj=mysqli_query($conn,"SELECT * FROM `products`");
+  }
+
+?>
+<div class='top'> 
+<a class="btn btn-info my-3" href="./create.php">New Product</a> 
+
+<form method=post action="" >
+    <input type=text name=key class="form-control" >
+    <button class='btn btn-info'>Search</button>
+</form>
+
+<form method=post action="" >
+    <input type=number name=from class="form-control" >
+    <input type=number name=to class="form-control" >
+    <button class='btn btn-info'>Filter</button>
+</form>
+
+</div>
+<?php if(isset($_GET['msg'])){
+   
+   if($_GET['msg']==1){
+   ?>
+             <div class='alert alert-success'>New Product Created</div>
+       <?php }elseif($_GET['msg']==2){?>
+             <div class='alert alert-info'> Product Updated</div>
+      <?php }else{ ?>
+             <div class='alert alert-danger'>Product Deleted</div>
+      <?php }
+          }
+      ?>
+ 
+<table class="table table-striped">
+    <tr><th>Name</th><th>Price</th><th>Delete</th> <th>Edit</th></tr>
+    <?php
+       while($product=mysqli_fetch_assoc($product_obj)){
+     ?>
+        <tr><td><a href="show.php?id=<?php echo $product['id'] ?>"><?php echo $product['name'] ?></a></td><td><?php echo $product['price'] ?> </td><td><a href="process.php?action=delete&id=<?php echo $product['id'] ?>" class='btn btn-danger'>Delete</a></td><td><a href="./edit.php?id=<?php echo $product['id'] ?>"class='btn btn-primary'>Edit</a></td></tr>
+    <?php
+       }
+    ?>
+</table>  
+</body>
+</html>
