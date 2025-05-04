@@ -1,5 +1,5 @@
 function loginUser(email, password) {
-  if (email === "noorrabie93@gmail.com" && password === '123456') {
+  if (email === "omar@gmail.com" && password === '123456') {
     window.location.href = "Home.html"; // هنا المسار الصحيح للصفحة الرئيسية
     return true;
   } else {
